@@ -39,7 +39,11 @@ function dataHandler(data) {
         }).done(function(data) {
             imageUrl = data.Poster;
         });
-        movieData = '<div class="tile"><img src="' + imageUrl + '"><br/>';
+        movieData = '<div class="tile">'+
+            '<a href="#" data-toggle="modal" data-target="#mapsModal">'+
+                '<img src="' + imageUrl + '"/>' +
+            '</a>' +
+            '<br/>';
         movieData += movie.title;
         if (movie.ratings) { movieData += ' (' + movie.ratings[0].code + ') </div>' };
         $(document.body).append(movieData);

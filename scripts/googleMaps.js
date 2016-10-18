@@ -6,6 +6,8 @@ var infowindow;
 function initMap() {
     var pyrmont = {lat: -33.867, lng: 151.195};
 
+    console.log('working');
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: pyrmont,
         zoom: 15
@@ -47,4 +49,4 @@ function createMarker(place) {
     });
 }
 
-initMap();
+// initMap();
