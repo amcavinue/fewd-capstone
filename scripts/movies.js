@@ -30,6 +30,7 @@ function dataHandler(data) {
     $.each(data, function(index, movie) {
         var movieData = '',
             imageUrl = '';
+
         $.ajax({
             url: "http://www.omdbapi.com/",
             async: false,
@@ -39,13 +40,20 @@ function dataHandler(data) {
         }).done(function(data) {
             imageUrl = data.Poster;
         });
-        movieData = '<div class="tile">'+
-            '<a href="#" data-toggle="modal" data-target="#mapsModal">'+
+
+        movieData = '<li class="tile">'+
+            '<a href="#">'+
                 '<img src="' + imageUrl + '"/>' +
-            '</a>' +
-            '<br/>';
-        movieData += movie.title;
-        if (movie.ratings) { movieData += ' (' + movie.ratings[0].code + ') </div>' };
-        $(document.body).append(movieData);
+                '<br/>' +
+                movie.title +
+            '</a>';
+
+        if (movie.ratings) {
+            movieData += ' (' + movie.ratings[0].code + ') </li>'
+        } else {
+            movieData += '</li>';
+        }
+
+        $('#movies-list').append(movieData);
     });
 }

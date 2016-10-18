@@ -48,5 +48,3 @@ function createMarker(place) {
         infowindow.open(map, this);
     });
 }
-
-// initMap();
