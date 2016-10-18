@@ -1,3 +1,5 @@
+'use strict';
+
 var map;
 var infowindow;
 
@@ -11,15 +13,20 @@ function initMap() {
 
     infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
-    service.nearbySearch({
+    /*service.nearbySearch({
         location: pyrmont,
         radius: 500,
         type: ['store']
+    }, callback);*/
+
+    service.textSearch({
+        location: pyrmont,
+        radius: '500',
+        query: 'cars'
     }, callback);
 }
 
 function callback(results, status) {
-    'use strict';
     if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
             createMarker(results[i]);
@@ -28,7 +35,6 @@ function callback(results, status) {
 }
 
 function createMarker(place) {
-    'use strict';
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
         map: map,

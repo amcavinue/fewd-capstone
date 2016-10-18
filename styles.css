@@ -3,6 +3,9 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
 #map {
     height: 100%;
 }
+
+.tile {display: inline-block; border: 1px solid grey; background: silver; padding: 4px; text-align: center; font-size: 15px;width:250px; }
