@@ -1,17 +1,19 @@
 'use strict';
 
-var hasLocation = false,
-    mapStarted = false,
+var mapStarted = false,
     userLocation,
     areaCode;
+var apikey = "hptve64cy9g4cqudvw9vrnyv";
+var baseUrl = "http://data.tmsapi.com/v1.1";
+var showtimesUrl = baseUrl + '/movies/showings';
+var d = new Date();
+var today = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
 
 $(function() {
+    $('#locationModal').modal('show');
+
     $('#movies-list').on('click', 'li', function() {
-        if (hasLocation) {
-            $('#mapsModal').modal('show');
-        } else {
-            $('#locationModal').modal('show');
-        }
+        $('#mapsModal').modal('show');
     });
 
     $('#mapsModal').on('shown.bs.modal', function (e) {
@@ -25,27 +27,15 @@ $(function() {
     $('#manual-location').submit(function(e) {
         e.preventDefault();
         areaCode = $('#area-code').val();
-        hasLocation = true;
+        getMovies();
         $('#locationModal').modal('hide');
     });
 
     $('#auto-location').click(function(e) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(handlePosition);
-            hasLocation = true;
             $('#locationModal').modal('hide');
         }
-    });
-
-    $.ajax({
-        url: showtimesUrl,
-        data: {
-            startDate: today,
-            zip: zipCode,
-            jsonp: "dataHandler",
-            api_key: apikey
-        },
-        dataType: "jsonp",
     });
 });
 
@@ -60,8 +50,8 @@ function handlePosition(position) {
         lng: lng
     };
 
-    // Use the lattitude and longitude from the browser
-    // to get the areacode from google.
+    // Use the lattitude and longitude from the
+    // browser to get the areacode from google.
     geocoder.geocode({'latLng': latlng}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             if (results[0]) {
@@ -70,10 +60,23 @@ function handlePosition(position) {
                 {
                     if (results[0].address_components[i].types[0] === "postal_code") {
                         areaCode = results[0].address_components[i].short_name;
-                        alert(areaCode);
+                        getMovies();
                     }
                 }
             }
         }
+    });
+}
+
+function getMovies() {
+    $.ajax({
+        url: showtimesUrl,
+        data: {
+            startDate: today,
+            zip: areaCode,
+            jsonp: "moviesHandler",
+            api_key: apikey
+        },
+        dataType: "jsonp"
     });
 }
