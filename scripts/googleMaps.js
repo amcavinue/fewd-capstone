@@ -2,7 +2,7 @@
 
 var map;
 var infowindow;
-var apiKey = 'AIzaSyDo5LxyVUv5EwGQBwaveIF4d0MaIVD_Dd8';
+var apiKeyGm = 'AIzaSyDo5LxyVUv5EwGQBwaveIF4d0MaIVD_Dd8';
 
 function initMap(userLocation, areaCode) {
     var pyrmont = {lat: -33.867, lng: 151.195};
@@ -61,7 +61,7 @@ function codeAddress(zip) {
         async: false,
         data: {
             address: zip,
-            key: apiKey
+            key: apiKeyGm
         }
     }).done(function(data) {
         location = data.results[0].geometry.location;

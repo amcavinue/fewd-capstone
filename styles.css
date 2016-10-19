@@ -19,4 +19,18 @@ input[type=number] {
     height: 300px;
 }
 
-.tile {display: inline-block; border: 1px solid grey; background: silver; padding: 4px; text-align: center; font-size: 15px;width:250px; }
+.tile {
+    display: inline-block;
+    border: 1px solid grey;
+    background: silver;
+    padding: 4px;
+    margin: 0.5em;
+    text-align: center;
+    font-size: 15px;
+    width:250px;
+}
+
+.tile img {
+    max-width: 240px;
+    max-height: 350px;
+}

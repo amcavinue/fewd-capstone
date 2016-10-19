@@ -8,19 +8,6 @@ var zipCode = "44256";
 var d = new Date();
 var today = d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
 
-$(document).ready(function() {
-    $.ajax({
-        url: showtimesUrl,
-        data: {
-                startDate: today,
-                zip: zipCode,
-                jsonp: "dataHandler",
-                api_key: apikey
-              },
-        dataType: "jsonp",
-    });
-});
-
 function dataHandler(data) {
     console.log(data);
 
