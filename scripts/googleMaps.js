@@ -2,29 +2,32 @@
 
 var map;
 var infowindow;
+var apiKey = 'AIzaSyDo5LxyVUv5EwGQBwaveIF4d0MaIVD_Dd8';
 
-function initMap() {
+function initMap(userLocation, areaCode) {
     var pyrmont = {lat: -33.867, lng: 151.195};
 
-    console.log('working');
+    if (userLocation === undefined) {
+        userLocation = codeAddress(areaCode);
+    }
 
     map = new google.maps.Map(document.getElementById('map'), {
-        center: pyrmont,
+        center: userLocation,
         zoom: 15
     });
 
     infowindow = new google.maps.InfoWindow();
     var service = new google.maps.places.PlacesService(map);
     /*service.nearbySearch({
-        location: pyrmont,
+        location: userLocation,
         radius: 500,
         type: ['store']
     }, callback);*/
 
     service.textSearch({
-        location: pyrmont,
+        location: userLocation,
         radius: '500',
-        query: 'cars'
+        query: 'movies'
     }, callback);
 }
 
@@ -47,4 +50,24 @@ function createMarker(place) {
         infowindow.setContent(place.name);
         infowindow.open(map, this);
     });
+}
+
+function codeAddress(zip) {
+    var geocoder = new google.maps.Geocoder(),
+        location;
+
+    $.ajax({
+        url: "https://maps.googleapis.com/maps/api/geocode/json",
+        async: false,
+        data: {
+            address: zip,
+            key: apiKey
+        }
+    }).done(function(data) {
+        location = data.results[0].geometry.location;
+    }).fail(function() {
+        alert('failed');
+    });
+
+    return location;
 }
