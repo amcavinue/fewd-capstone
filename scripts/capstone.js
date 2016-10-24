@@ -6,7 +6,7 @@ $(function() {
     $('#manual-location').submit(function(e) {
         e.preventDefault();
         areaCode = $('#area-code').val();
-        // TODO: Remove/handle initMap here.
+        // Initialize the maps modal.
         initMap();
         getMovies();
         $('#locationModal').modal('hide');
@@ -20,12 +20,12 @@ $(function() {
     });
 
     $('#movies-list').on('click', 'li', function() {
+        placeMarkers($(this).data('index'));
         $('#mapsModal').modal('show');
     });
 
     $('#mapsModal').on('shown.bs.modal', function (e) {
-        // Only start the map once, after the first modal is shown completely.
-        initMap(userLocation, areaCode);
-        $('#mapsModal').off('shown.bs.modal');
+        google.maps.event.trigger(map, 'resize');
+        map.fitBounds(bounds);
     });
 });

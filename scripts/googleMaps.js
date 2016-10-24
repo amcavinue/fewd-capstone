@@ -13,14 +13,14 @@ function initMap(userLocation, areaCode) {
     infowindow = new google.maps.InfoWindow();
 }
 
-function placeMarkers(title) {
+function placeMarkers(index) {
     clearMarkers();
 
-    for (var key in theatres[title]) {
-        createMarker(theatres[title][key]);
+    for (var i = 0; i < movies[index].showtimes.length; i++) {
+        if (theatres[movies[index].showtimes[i].theatre.id]) {
+            createMarker(theatres[movies[index].showtimes[i].theatre.id], movies[index].showtimes[i].theatre.name);
+        }
     }
-
-    map.fitBounds(bounds);
 }
 
 function clearMarkers() {
@@ -30,10 +30,10 @@ function clearMarkers() {
     markersArray.length = 0;
 }
 
-function createMarker(position) {
+function createMarker(position, name) {
     var marker = new google.maps.Marker({
         map: map,
-        position: place.geometry.location // TODO: position
+        position: position
     });
 
     markersArray.push(marker);
@@ -42,7 +42,7 @@ function createMarker(position) {
     bounds.extend(marker.getPosition());
 
     google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent(place.name);
+        infowindow.setContent(name);
         infowindow.open(map, this);
     });
 }
