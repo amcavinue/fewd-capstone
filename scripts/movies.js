@@ -3,22 +3,15 @@
 function moviesHandler(data) {
     console.log(data);
 
-    $(document.body).append('<p>Found ' + data.length + ' movies showing within 5 miles of ' + areaCode +':</p>');
+    $(document.body).prepend('<p>Found ' + data.length + ' movies showing within 15 miles of ' + areaCode +':</p>');
     var movies = data.hits;
 
     $.each(data, function(index, movie) {
         var movieData = '',
-            imageUrl = '';
+            imageUrl = '',
+            currentMovieTheatres = {};
 
-        $.ajax({
-            url: "http://www.omdbapi.com/",
-            async: false,
-            data: {
-                t: movie.title
-            }
-        }).done(function(data) {
-            imageUrl = data.Poster;
-        });
+        imageUrl = getImage(movie.title);
 
         movieData = '<li class="tile">'+
             '<a href="#">'+
@@ -28,11 +21,19 @@ function moviesHandler(data) {
             '</a>';
 
         if (movie.ratings) {
-            movieData += ' (' + movie.ratings[0].code + ') </li>'
+            movieData += ' (' + movie.ratings[0].code + ') </li>';
         } else {
             movieData += '</li>';
         }
 
         $('#movies-list').append(movieData);
+
+        // Get the theatre data for each movie.
+        for (var i = 0; i < movie.showtimes.length; i++) {
+            currentMovieTheatres[movie.showtimes[i].theatre.name] = textSearch(movie.showtimes[i].theatre.name);
+        }
+        theatres[movie.title] = currentMovieTheatres;
     });
+
+    console.log(theatres);
 }
