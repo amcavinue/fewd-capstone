@@ -27,7 +27,7 @@ $(function() {
         $('#mapsModal').modal('show');
     });
 
-    $('#mapsModal').on('shown.bs.modal', function (e) {
+    $('#mapsModal').on('shown.bs.modal', function () {
         google.maps.event.trigger(map, 'resize');
         map.fitBounds(bounds);
     });
@@ -43,6 +43,8 @@ function checkChrome() {
         isIEedge = winNav.userAgent.indexOf("Edge") > -1,
         isIOSChrome = winNav.userAgent.match("CriOS");
 
+    // Geolocation isn't supported in Chrome,
+    // so turn that off if we're using it.
     if(isIOSChrome || isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera == false && isIEedge == false) {
         $('#auto-location-container').hide();
     }

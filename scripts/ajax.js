@@ -42,7 +42,7 @@ function getMovies() {
         data: {
             startDate: today,
             zip: areaCode,
-            jsonp: "moviesHandler",
+            jsonp: "moviesHandler", // This is the callback.
             radius: radius,
             api_key: "hptve64cy9g4cqudvw9vrnyv"
         },
@@ -92,23 +92,39 @@ function codeAddress(address) {
 // Google maps API.
 // Gets the addresses for movie theatres from Google.
 function textSearch(query, id) {
-    var service;
+    var service = new google.maps.places.PlacesService(map);
 
     var request = {
         location: userLocation,
         query: query
     };
 
-    service = new google.maps.places.PlacesService(map);
     // Only look for theatres we haven't gotten yet.
     if (!theatres[id]) {
         service.textSearch(request, function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 for (var i = 0; i < results.length; i++) {
-                    // Store the latlng object under the theatre id.
-                    theatres[id] = codeAddress(results[i].formatted_address);
+                    // Store the data under the theatre id.
+                    theatres[id] = results[i];
+                    getPlaceDetails(results[i].place_id, id);
                 }
             }
         });
     }
+}
+
+// Google maps place details.
+// https://developers.google.com/maps/documentation/javascript/places?csw=1#place_details_requests
+function getPlaceDetails(placeId, theatreId) {
+    var service = new google.maps.places.PlacesService(map);
+
+    var request = {
+        placeId: placeId
+    };
+
+    service.getDetails(request, function(place, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            theatres[theatreId].details = place;
+        }
+    });
 }
