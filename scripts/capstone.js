@@ -1,19 +1,26 @@
 'use strict';
 
 $(function() {
+    // Fix geolocation bug in Chrome.
     checkChrome();
 
-    $('#locationModal').modal('show');
+    // The entry modal asking for the user's location.
+    $('#locationModal').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+    });
 
+    // Handle zip code insertion from the user.
     $('#manual-location').submit(function(e) {
         e.preventDefault();
         areaCode = $('#area-code').val();
-        // Initialize the maps modal.
         initMap();
         getMovies();
         $('#locationModal').modal('hide');
     });
 
+    // Handle geocode insertion from the user.
     $('#auto-location').click(function(e) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(getAreaCode);
@@ -21,12 +28,14 @@ $(function() {
         }
     });
 
+    // Put a listener on all the cards on the page.
     $('#movies-list').on('click', 'li', function() {
         placeMarkers($(this).data('index'));
         $('#maps-movie-title').text($(this).find('.movie-title').text());
         $('#mapsModal').modal('show');
     });
 
+    // When the maps modal fully loads, resize the map to fit.
     $('#mapsModal').on('shown.bs.modal', function () {
         google.maps.event.trigger(map, 'resize');
         map.fitBounds(bounds);

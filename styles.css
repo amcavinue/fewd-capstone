@@ -27,6 +27,11 @@ input[type=number] {
     text-align: left;
 }
 
+.modal-body {
+    width: 100%;
+    height: 100%;
+}
+
 .modal-title {
     font-weight: 700;
 }
@@ -94,9 +99,4 @@ input[type=number] {
 .tile .movie-description {
     height: 4.25em;
     margin-top: 0.5em;
-}
-
-.modal-body {
-    width: 100%;
-    height: 100%;
 }

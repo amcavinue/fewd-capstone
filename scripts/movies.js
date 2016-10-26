@@ -1,5 +1,6 @@
 'use strict';
 
+// Use the movie data to create and format the cards for the DOM.
 function moviesHandler(data) {
     movies = data;
 
@@ -26,6 +27,7 @@ function moviesHandler(data) {
     });
 }
 
+// Use the movie data to create the html for the cards.
 function renderCard(index, movie, imageUrl) {
     var movieData = '<li class="tile" data-index=' + index + '>'+
         '<div class="poster-container">'+
