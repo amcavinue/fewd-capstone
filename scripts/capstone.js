@@ -23,6 +23,7 @@ $(function() {
 
     $('#movies-list').on('click', 'li', function() {
         placeMarkers($(this).data('index'));
+        $('#maps-movie-title').text($(this).find('.movie-title').text());
         $('#mapsModal').modal('show');
     });
 
