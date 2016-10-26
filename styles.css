@@ -27,6 +27,10 @@ input[type=number] {
     text-align: left;
 }
 
+.modal-title {
+    font-weight: 700;
+}
+
 #locationModal {
     text-align: center;
 }
