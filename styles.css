@@ -49,6 +49,7 @@ input[type=number] {
     text-align: left;
     width: 15.625em;
     cursor: pointer;
+    vertical-align: top;
 }
 
 .tile .poster-container {
