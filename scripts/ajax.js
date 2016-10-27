@@ -99,8 +99,9 @@ function textSearch(query, id) {
         query: query
     };
 
-    // Only look for theatres we haven't gotten yet.
-    if (!theatres[id]) {
+    // Only look for theatres we haven't requested yet.
+    if (!theatreRequests[id]) {
+        theatreRequests[id] = true;
         service.textSearch(request, function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 for (var i = 0; i < results.length; i++) {
@@ -116,15 +117,25 @@ function textSearch(query, id) {
 // Google maps place details.
 // https://developers.google.com/maps/documentation/javascript/places?csw=1#place_details_requests
 function getPlaceDetails(placeId, theatreId) {
-    var service = new google.maps.places.PlacesService(map);
+    var service;
 
-    var request = {
-        placeId: placeId
-    };
+    // SetTimeout is needed hear to keep from hitting
+    // the 5 requests per second limit from Google.
+    setTimeout(function() {
+        service = new google.maps.places.PlacesService(map);
 
-    service.getDetails(request, function(place, status) {
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-            theatres[theatreId].details = place;
-        }
-    });
+        var request = {
+            placeId: placeId
+        };
+
+        service.getDetails(request, function(place, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                theatres[theatreId].details = place;
+            } else {
+                console.log(status);
+            }
+        });
+    }, delay);
+
+    delay += 10;
 }

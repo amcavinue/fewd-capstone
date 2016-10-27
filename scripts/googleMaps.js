@@ -18,7 +18,7 @@ function placeMarkers(index) {
 
     for (var i = 0; i < movies[index].showtimes.length; i++) {
         if (theatres[movies[index].showtimes[i].theatre.id]) {
-            createMarker(theatres[movies[index].showtimes[i].theatre.id].latlng, movies[index].showtimes[i].theatre.name);
+            createMarker(theatres[movies[index].showtimes[i].theatre.id].geometry.location, movies[index].showtimes[i].theatre.name);
         }
     }
 }

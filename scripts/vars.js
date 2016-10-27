@@ -7,7 +7,9 @@ var userLocation,
     apiKeyGm = 'AIzaSyDo5LxyVUv5EwGQBwaveIF4d0MaIVD_Dd8',
     bounds = new google.maps.LatLngBounds(),
     radius = 15,
-    markersArray = [];
+    markersArray = [],
+    delay = 10,
+    theatreRequests = [];
 
 // Variables that hold movie data.
 var movies,
