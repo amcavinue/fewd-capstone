@@ -119,7 +119,7 @@ function textSearch(query, id) {
 function getPlaceDetails(placeId, theatreId) {
     var service;
 
-    // SetTimeout is needed hear to keep from hitting
+    // SetTimeout is needed here to keep from hitting
     // the 5 requests per second limit from Google.
     setTimeout(function() {
         service = new google.maps.places.PlacesService(map);
