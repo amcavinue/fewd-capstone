@@ -137,5 +137,5 @@ function getPlaceDetails(placeId, theatreId) {
         });
     }, delay);
 
-    delay += 10;
+    delay += 200;
 }

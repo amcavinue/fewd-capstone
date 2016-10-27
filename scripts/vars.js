@@ -8,7 +8,7 @@ var userLocation,
     bounds = new google.maps.LatLngBounds(),
     radius = 15,
     markersArray = [],
-    delay = 10,
+    delay = 200,
     theatreRequests = [];
 
 // Variables that hold movie data.
