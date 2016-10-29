@@ -50,6 +50,30 @@ input[type=number] {
     padding: 0;
 }
 
+#movie-details .movie {
+    padding: 1em;
+}
+
+#movie-details .movie:nth-of-type(odd) {
+    background: #eee;
+}
+
+#movie-details .movie .showtimes {
+    margin: 0;
+}
+
+#movie-details .movie .theatre-details {
+    line-height: 1.5em;
+}
+
+#movie-details .movie .theatre-details h5 {
+    font-weight: 700;
+}
+
+#movie-details .movie hr {
+    border-color: #ccc;
+}
+
 .tile {
     display: inline-block;
     background: #ddd;

@@ -32,6 +32,7 @@ $(function() {
     $('#movies-list').on('click', 'li', function() {
         placeMarkers($(this).data('index'));
         $('#maps-movie-title').text($(this).find('.movie-title').text());
+        renderTheatreData($(this).data('index'));
         $('#mapsModal').modal('show');
     });
 

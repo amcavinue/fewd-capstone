@@ -60,3 +60,44 @@ function renderCard(index, movie, imageUrl) {
 
     $('#movies-list').append(movieData);
 }
+
+// Use the theatre data to create the html for the showtimes & locations.
+function renderTheatreData(index) {
+    var currentTheatres = {},
+        details = '';
+
+    for (var i = 0; i < movies[index].showtimes.length; i++) {
+        var theatreId = movies[index].showtimes[i].theatre.id;
+
+        if (!currentTheatres[theatreId]) {
+            currentTheatres[theatreId] = {
+                theatreId: theatreId,
+                name: movies[index].showtimes[i].theatre.name,
+                times: [movies[index].showtimes[i].dateTime]
+            };
+        } else {
+            currentTheatres[theatreId].times.push(movies[index].showtimes[i].dateTime);
+        }
+    }
+
+    for (var theatre in currentTheatres) {
+        details += '<div class="movie"><div class="theatre-details"><h5>'+
+                    currentTheatres[theatre].name;
+        details += '</h5>' +
+                    theatres[theatre].formatted_address;
+        details += '<br />' +
+                    theatres[theatre].details.formatted_phone_number;
+        details += '<br />' +
+                    '<a href="' + theatres[theatre].details.website + '">' + theatres[theatre].details.website + '</a>';
+        details += '</div><hr /><p class="showtimes">';
+
+        for (var i = 0; i < currentTheatres[theatre].times.length; i++) {
+            var formattedTime = moment(currentTheatres[theatre].times[i]).calendar();
+            details +=  formattedTime + '<br />';
+        }
+
+        details += '</p></div>';
+    }
+
+    $('#movie-details').empty().html(details);
+}

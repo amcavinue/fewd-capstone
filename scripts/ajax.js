@@ -27,6 +27,8 @@ function getAreaCode(position) {
                     }
                 }
             }
+        } else {
+            console.log(status);
         }
     });
 }
@@ -47,6 +49,11 @@ function getMovies() {
             api_key: "hptve64cy9g4cqudvw9vrnyv"
         },
         dataType: "jsonp"
+    }).fail(function(data) {
+        if (data) {
+            console.log('OnConnect error:');
+            console.log(data);
+        }
     });
 }
 
@@ -82,8 +89,9 @@ function codeAddress(address) {
         }
     }).done(function(data) {
         location = data.results[0].geometry.location;
-    }).fail(function() {
-        console.log('failed');
+    }).fail(function(data) {
+        console.log('codeAddress error from google maps:');
+        console.log(data);
     });
 
     return location;
@@ -109,6 +117,8 @@ function textSearch(query, id) {
                     theatres[id] = results[i];
                     getPlaceDetails(results[i].place_id, id);
                 }
+            } else {
+                console.log(status);
             }
         });
     }
