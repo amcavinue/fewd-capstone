@@ -7,7 +7,7 @@ function moviesHandler(data) {
     $(document.body).prepend('<h2>Found ' + data.length + ' movies showing within 15 miles of ' + areaCode +'</h2>');
 
     $.each(data, function(index, movie) {
-        var imageUrl = getImage(movie.title);;
+        var imageUrl = getImage(movie.title);
 
         renderCard(index, movie, imageUrl);
 

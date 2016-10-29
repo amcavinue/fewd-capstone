@@ -1,18 +1,5 @@
 'use strict';
 
-function initMap(userLocation, areaCode) {
-    if (userLocation === undefined) {
-        userLocation = codeAddress(areaCode);
-    }
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: userLocation,
-        zoom: radius
-    });
-
-    infowindow = new google.maps.InfoWindow();
-}
-
 function placeMarkers(index) {
     clearMarkers();
 

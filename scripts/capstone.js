@@ -15,7 +15,7 @@ $(function() {
     $('#manual-location').submit(function(e) {
         e.preventDefault();
         areaCode = $('#area-code').val();
-        initMap();
+        initMap(userLocation, areaCode);
         getMovies();
         $('#locationModal').modal('hide');
     });

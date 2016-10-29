@@ -22,7 +22,7 @@ function getAreaCode(position) {
                 {
                     if (results[0].address_components[i].types[0] === "postal_code") {
                         areaCode = results[0].address_components[i].short_name;
-                        initMap();
+                        initMap(userLocation, areaCode);
                         getMovies();
                     }
                 }
@@ -44,16 +44,17 @@ function getMovies() {
         data: {
             startDate: today,
             zip: areaCode,
+            dataType: 'jsonp',
             jsonp: "moviesHandler", // This is the callback.
             radius: radius,
             api_key: "hptve64cy9g4cqudvw9vrnyv"
         },
         dataType: "jsonp"
-    }).fail(function(data) {
-        if (data) {
-            console.log('OnConnect error:');
-            console.log(data);
-        }
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
     });
 }
 
@@ -89,9 +90,11 @@ function codeAddress(address) {
         }
     }).done(function(data) {
         location = data.results[0].geometry.location;
-    }).fail(function(data) {
-        console.log('codeAddress error from google maps:');
-        console.log(data);
+    })
+    .fail(function (jqXHR, error, errorThrown) {
+        console.log(jqXHR);
+        console.log(error);
+        console.log(errorThrown);
     });
 
     return location;
