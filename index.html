@@ -62,25 +62,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
 
 <!-- Application files -->
-<script src="scripts/vars.js"></script>
-<script src="scripts/movies.js"></script>
-<script src="scripts/googleMaps.js"></script>
-<script src="scripts/ajax.js"></script>
-<script src="scripts/capstone.js"></script>
-
-<script>
-    function initMap(userLocation, areaCode) {
-        if (userLocation === undefined) {
-            userLocation = codeAddress(areaCode);
-        }
-
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: userLocation,
-            zoom: radius
-        });
-
-        infowindow = new google.maps.InfoWindow();
-    }
-</script>
+<script src="scripts/capstoneFull.js"></script>
 </body>
 </html>
