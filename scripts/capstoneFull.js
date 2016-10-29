@@ -70,9 +70,9 @@ function codeAddress(address) {
         location = data.results[0].geometry.location;
     })
         .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR);
-        console.log(error);
-        console.log(errorThrown);
+//        console.log(jqXHR);
+//        console.log(error);
+//        console.log(errorThrown);
     });
 
     return location;
@@ -97,9 +97,9 @@ function getMovies() {
         dataType: "jsonp"
     })
         .fail(function (jqXHR, error, errorThrown) {
-        console.log(jqXHR);
-        console.log(error);
-        console.log(errorThrown);
+//        console.log(jqXHR);
+//        console.log(error);
+//        console.log(errorThrown);
     });
 }
 
@@ -208,7 +208,7 @@ function textSearch(query, id) {
                         getPlaceDetails(results[i].place_id, id);
                     }
                 } else {
-                    console.log(status);
+//                    console.log(status);
                 }
             });
         }
@@ -239,7 +239,7 @@ function getPlaceDetails(placeId, theatreId) {
                 // so turn off the loading dialog.
                 waitingDialog.hide();
             } else {
-                console.log(status);
+//                console.log(status);
             }
         });
     }, delay);
@@ -275,7 +275,7 @@ function getAreaCode(position) {
                 }
             }
         } else {
-            console.log(status);
+//            console.log(status);
         }
     });
 }
