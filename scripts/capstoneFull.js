@@ -13,7 +13,7 @@ var userLocation,
     radius = 15,
     markersArray = [],
     delay = 200,
-    theatreRequests = [];
+    theatreRequests = {};
 
 // Variables that hold movie data.
 var movies,
@@ -185,28 +185,36 @@ function renderCard(index, movie, imageUrl) {
 // Google maps API.
 // Gets the addresses for movie theatres from Google.
 function textSearch(query, id) {
-    var service = new google.maps.places.PlacesService(map);
+    var service;
 
-    var request = {
-        location: userLocation,
-        query: query
-    };
+    // SetTimeout is needed here to keep from hitting
+    // the 5 requests per second limit from Google.
+    setTimeout(function() {
+        service = new google.maps.places.PlacesService(map);
 
-    // Only look for theatres we haven't requested yet.
-    if (!theatreRequests[id]) {
-        theatreRequests[id] = true;
-        service.textSearch(request, function(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    // Store the data under the theatre id.
-                    theatres[id] = results[i];
-                    getPlaceDetails(results[i].place_id, id);
+        var request = {
+            location: userLocation,
+            query: query
+        };
+
+        // Only look for theatres we haven't requested yet.
+        if (!theatreRequests[id]) {
+            theatreRequests[id] = true;
+            service.textSearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    for (var i = 0; i < results.length; i++) {
+                        // Store the data under the theatre id.
+                        theatres[id] = results[i];
+                        getPlaceDetails(results[i].place_id, id);
+                    }
+                } else {
+                    console.log(status);
                 }
-            } else {
-                console.log(status);
-            }
-        });
-    }
+            });
+        }
+    }, delay);
+
+    delay += 200;
 }
 
 // Google maps place details.
@@ -226,6 +234,10 @@ function getPlaceDetails(placeId, theatreId) {
         service.getDetails(request, function(place, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 theatres[theatreId].details = place;
+
+                // The last major ajax call has finished,
+                // so turn off the loading dialog.
+                waitingDialog.hide();
             } else {
                 console.log(status);
             }
@@ -360,6 +372,7 @@ $(function() {
     // Handle zip code insertion from the user.
     $('#manual-location').submit(function(e) {
         e.preventDefault();
+        waitingDialog.show();
         areaCode = $('#area-code').val();
         initMap(userLocation, areaCode);
         getMovies();
@@ -369,6 +382,7 @@ $(function() {
     // Handle geocode insertion from the user.
     $('#auto-location').click(function(e) {
         if (navigator.geolocation) {
+            waitingDialog.show();
             navigator.geolocation.getCurrentPosition(getAreaCode);
             $('#locationModal').modal('hide');
         }
