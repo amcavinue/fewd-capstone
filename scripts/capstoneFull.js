@@ -10,7 +10,7 @@ var userLocation,
     infowindow,
     apiKeyGm = 'AIzaSyDo5LxyVUv5EwGQBwaveIF4d0MaIVD_Dd8',
     bounds = new google.maps.LatLngBounds(),
-    radius = 15,
+    radius = 5,
     markersArray = [],
     delay = 200,
     theatreRequests = {};
@@ -107,7 +107,7 @@ function getMovies() {
 function moviesHandler(data) {
     movies = data;
 
-    $(document.body).prepend('<h2>Found ' + data.length + ' movies showing within 15 miles of ' + areaCode +'</h2>');
+    $(document.body).prepend('<h2>Found ' + data.length + ' movies showing within ' + radius + ' miles of ' + areaCode +'</h2>');
 
     $.each(data, function(index, movie) {
         var imageUrl = getImage(movie.title);
