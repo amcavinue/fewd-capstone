@@ -112,7 +112,10 @@ function getMovies() {
 function moviesHandler(data) {
     movies = data;
 
-    if (data.length < movieLimit) {
+    if (!data) {
+        alert('There are no movies showing with 5 miles of that location!');
+        location.reload();
+    } else if (data.length < movieLimit) {
         movieLimit = data.length;
     }
 
