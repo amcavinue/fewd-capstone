@@ -13,7 +13,12 @@ var userLocation,
     radius = 5,
     markersArray = [],
     delay = 200,
-    theatreRequests = {};
+    theatreRequests = {},
+    movieLimit = 7,
+    theatreLimit = 3,
+    // Total theatre request calls = movieLimit * theatreLimit
+    // Time till theatre requests complete (ms) = 200 * above
+    textSearches = 0;
 
 // Variables that hold movie data.
 var movies,
@@ -92,7 +97,7 @@ function getMovies() {
             dataType: 'jsonp',
             jsonp: "moviesHandler", // This is the callback.
             radius: radius,
-            api_key: "hptve64cy9g4cqudvw9vrnyv"
+            api_key: "w95yuuq83vtgapdw6vak5nf2"
         },
         dataType: "jsonp"
     })
@@ -107,27 +112,41 @@ function getMovies() {
 function moviesHandler(data) {
     movies = data;
 
-    $(document.body).prepend('<h2>Found ' + data.length + ' movies showing within ' + radius + ' miles of ' + areaCode +'</h2>');
+    if (data.length < movieLimit) {
+        movieLimit = data.length;
+    }
 
-    $.each(data, function(index, movie) {
+    $(document.body).prepend('<h2>Showing ' + movieLimit + ' movies within ' + radius + ' miles of ' + areaCode +'</h2>');
+
+    for (var i = 0; i < movieLimit; i++ ){
+        var index = i,
+            movie = data[i],
+            theatreLength = theatreLimit;
+
+        if (movie.showtimes.length < theatreLength) {
+            theatreLength = movie.showtimes.length;
+        }
+
+        textSearches += theatreLength;
+
+        // Get the theatre data for each movie.
+        for (var j = 0; j < theatreLength; j++) {
+            textSearch(movie.showtimes[j].theatre.name, movie.showtimes[j].theatre.id);
+        }
+
         var imageUrl = getImage(movie.title);
 
         renderCard(index, movie, imageUrl);
 
-        // Get the theatre data for each movie.
-        for (var i = 0; i < movie.showtimes.length; i++) {
-            textSearch(movie.showtimes[i].theatre.name, movie.showtimes[i].theatre.id);
-        }
-    });
+        // Clamp the titles and descriptions so they don't overflow the card.
+        $('.movie-title').succinct({
+            size: 48
+        });
 
-    // Clamp the titles and descriptions so they don't overflow the card.
-    $('.movie-title').succinct({
-        size: 48
-    });
-
-    $('.movie-description').succinct({
-        size: 64
-    });
+        $('.movie-description').succinct({
+            size: 64
+        });
+    }
 }
 
 // Get images from the OMDB API.
@@ -146,40 +165,6 @@ function getImage(title) {
     });
 
     return imageUrl;
-}
-
-// Use the movie data to create the html for the cards.
-function renderCard(index, movie, imageUrl) {
-    var movieData = '<li class="tile" data-index=' + index + '>'+
-        '<div class="poster-container">'+
-        '<span class="img-helper"></span>';
-
-    if (imageUrl === undefined || imageUrl === 'N/A') {
-        movieData += '<span class="no-image">No Image</span>';
-    } else {
-        movieData += '<img src="' + imageUrl + '"/>';
-    }
-
-    movieData += '</div>'+
-        '<br/>' +
-        '<p class="movie-title">' + movie.title + '</p>'+
-        '<hr/>';
-
-    if (movie.ratings) {
-        movieData += '<span class="rating">Rating</span>' + movie.ratings[0].code;
-    } else {
-        movieData += '<span class="rating">Rating</span>N/A';
-    }
-
-    if (movie.longDescription) {
-        movieData += '<p class="movie-description">' + movie.longDescription + '</p>';
-    } else {
-        movieData += '<p class="movie-description"></p>';
-    }
-
-    movieData += '</li>';
-
-    $('#movies-list').append(movieData);
 }
 
 // Google maps API.
@@ -210,7 +195,19 @@ function textSearch(query, id) {
                 } else {
 //                    console.log(status);
                 }
+
+                textSearches -= 1;
+                if (textSearches === 0) {
+                    // Turn off the loading dialog after all the major ajax calls.
+                    waitingDialog.hide();
+                }
             });
+        } else {
+            textSearches -= 1;
+            if (textSearches === 0) {
+                // Turn off the loading dialog after all the major ajax calls.
+                waitingDialog.hide();
+            }
         }
     }, delay);
 
@@ -234,10 +231,6 @@ function getPlaceDetails(placeId, theatreId) {
         service.getDetails(request, function(place, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 theatres[theatreId].details = place;
-
-                // The last major ajax call has finished,
-                // so turn off the loading dialog.
-                waitingDialog.hide();
             } else {
 //                console.log(status);
             }
@@ -245,6 +238,42 @@ function getPlaceDetails(placeId, theatreId) {
     }, delay);
 
     delay += 200;
+}
+
+// Use the movie data to create the html for the cards.
+function renderCard(index, movie, imageUrl) {
+    var movieData = '<li class="tile" data-index=' + index + '>'+
+        '<div class="poster-container">'+
+        '<span class="img-helper"></span>',
+        parsed;
+
+    if (imageUrl === undefined || imageUrl === 'N/A') {
+        movieData += '<span class="no-image">No Image</span>';
+    } else {
+        movieData += '<img src="' + imageUrl + '"/>';
+    }
+
+    movieData += '</div>'+
+        '<br/>' +
+        '<p class="movie-title">' + movie.title + '</p>'+
+        '<hr/>';
+
+    if (movie.ratings) {
+        movieData += '<span class="rating">Rating</span>' + movie.ratings[0].code;
+    } else {
+        movieData += '<span class="rating">Rating</span>N/A';
+    }
+
+    if (movie.longDescription) {
+        movieData += '<p class="movie-description">' + movie.longDescription + '</p>';
+    } else {
+        movieData += '<p class="movie-description"></p>';
+    }
+
+    movieData += '</li>';
+
+    parsed = $.parseHTML(movieData),
+    $('#movies-list').append(parsed);
 }
 
 // Google maps geocoding service.
@@ -281,11 +310,17 @@ function getAreaCode(position) {
 }
 
 function placeMarkers(index) {
+    var theatreLength = theatreLimit;
+
     // Clear the existing markers.
     for (var i = 0; i < markersArray.length; i++ ) {
         markersArray[i].setMap(null);
     }
     markersArray.length = 0;
+
+    if (movies[index].showtimes.length < theatreLength) {
+        theatreLength = movies[index].showtimes.length;
+    }
 
     // Place the markers on the map.
     for (var i = 0; i < movies[index].showtimes.length; i++) {
@@ -316,8 +351,13 @@ function createMarker(position, name) {
 function renderTheatreData(index) {
     var currentTheatres = {},
         details = '';
+    var theatreLength = theatreLimit;
 
-    for (var i = 0; i < movies[index].showtimes.length; i++) {
+    if (movies[index].showtimes.length < theatreLength) {
+        theatreLength = movies[index].showtimes.length;
+    }
+
+    for (var i = 0; i < theatreLength; i++) {
         var theatreId = movies[index].showtimes[i].theatre.id;
 
         if (!currentTheatres[theatreId]) {
@@ -372,19 +412,19 @@ $(function() {
     // Handle zip code insertion from the user.
     $('#manual-location').submit(function(e) {
         e.preventDefault();
+        $('#locationModal').modal('hide');
         waitingDialog.show();
         areaCode = $('#area-code').val();
         initMap(userLocation, areaCode);
         getMovies();
-        $('#locationModal').modal('hide');
     });
 
     // Handle geocode insertion from the user.
     $('#auto-location').click(function(e) {
         if (navigator.geolocation) {
+            $('#locationModal').modal('hide');
             waitingDialog.show();
             navigator.geolocation.getCurrentPosition(getAreaCode);
-            $('#locationModal').modal('hide');
         }
     });
 
