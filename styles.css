@@ -8,6 +8,11 @@ html, body {
 body {
     text-align: center;
     font-family: "Roboto", Helvetica, sans-serif;
+    color: #333;
+}
+
+h2 {
+    color: #fff;
 }
 
 hr {
@@ -26,6 +31,7 @@ input[type=number] {
 
 .modal {
     text-align: left;
+    color: #fff;
 }
 
 .modal-body {
@@ -35,6 +41,11 @@ input[type=number] {
 
 .modal-title {
     font-weight: 700;
+    color: #fff;
+}
+
+.modal h3 {
+    color: #fff;
 }
 
 #locationModal {
@@ -56,7 +67,7 @@ input[type=number] {
 }
 
 #movie-details .movie:nth-of-type(odd) {
-    background: #eee;
+    background: #4c4c4c;
 }
 
 #movie-details .movie .showtimes {
