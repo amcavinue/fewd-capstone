@@ -154,7 +154,7 @@ function moviesHandler(data) {
 
 // Get images from the OMDB API.
 // http://omdbapi.com/
-function getImage(title) {
+/*function getImage(title) {
     var imageUrl;
 
     $.ajax({
@@ -168,7 +168,29 @@ function getImage(title) {
     });
 
     return imageUrl;
+}*/
+
+// Get images from the TheMovieDB API.
+function getImage(title) {
+   var imageUrl;
+
+    $.ajax({
+        url: "https://api.themoviedb.org/3/search/movie",
+        async: false,
+        data: {
+            api_key: 'b69649c29ceec18eb5daa4a46f53b5f9',
+            query: title
+        }
+    }).done(function(data) {
+        console.log(data, 185);
+        if (data.results.length !== 0) {
+            imageUrl = 'http://image.tmdb.org/t/p/w500/' + data.results[0].poster_path;
+        }
+    });
+
+    return imageUrl; 
 }
+
 
 // Google maps API.
 // Gets the addresses for movie theatres from Google.
